@@ -12,7 +12,9 @@ class TareaController extends Controller
      */
     public function index()
     {
-        //
+        $title['titles']=Tarea::all();
+
+        return view('tarea.index', $title);
     }
 
     /**
@@ -28,7 +30,9 @@ class TareaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $title = $request->all(); // o $title = $request->input('title');
+        Tarea::create($title);
+        return redirect ('/');
     }
 
     /**
@@ -42,24 +46,34 @@ class TareaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(tarea $tarea)
+    public function edit($id)
     {
-        //
+        $title = Tarea::find($id);
+        return view('tarea.edit', compact('title')); 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, tarea $tarea)
+    public function update(Request $request, $id)
     {
-        //
+        $titleData = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $title = Tarea::findOrFail($id);
+        $title->update($titleData);
+
+        return redirect('/');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(tarea $tarea)
+    public function destroy($id)
     {
-        //
+        $title = Tarea::findOrFail($id);
+        $title->delete();
+        return redirect ('/');
     }
 }
