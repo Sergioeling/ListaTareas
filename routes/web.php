@@ -3,24 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TareaController;
 
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/', [TareaController::class, 'index'])->name('tareas.index');
+    Route::post('/', [TareaController::class, 'store'])->name('tareas.store');
+    Route::delete('/{id}', [TareaController::class, 'destroy'])->name('tareas.destroy');
+    Route::get('/{id}/edit', [TareaController::class, 'edit'])->name('tareas.edit');
+    Route::put('/{id}', [TareaController::class, 'update'])->name('tareas.update');
+    Route::get('/profile', function () {
+        return view('profile.show');
+    })->name('profile.show');
 
-//Route::get('/', function () {
-//    return view('tarea.index');
-//});
-
-Route::get('/', [TareaController::class, 'index']);
-Route::post('/', [TareaController::class, 'store']);
-Route::delete('/{id}', [TareaController::class, 'destroy'])->name('title.destroy');
-Route::get('/{id}/edit', [TareaController::class, 'edit'])->name('title.edit');
-Route::put('/{id}', [TareaController::class, 'update'])->name('title.update');
-
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+    // Dashboard route
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('profile.show');
     })->name('dashboard');
 });

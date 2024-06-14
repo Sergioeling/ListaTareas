@@ -39,7 +39,7 @@
         <div class="card">
             <h2 class="text-center mb-4">Editar Tarea</h2>
 
-            <form action="{{ route('title.update', $title->id) }}" method="POST" class="mb-3">
+            <form action="{{ route('tareas.update', $title->id) }}" method="POST" class="mb-3">
                 @csrf
                 @method('PUT')
                 <div class="input-group">

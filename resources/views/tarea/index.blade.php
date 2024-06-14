@@ -6,7 +6,7 @@
     <title>Gestión de Tareas</title>
 
     <!-- Bootstrap CSS v5.3.2 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -61,12 +61,21 @@
         <div class="header">
             <h2 class="title">Lista de Tareas</h2>
             <div class="login-register-btns">
-                <a href="{{route('login') }}" class="btn btn-outline-primary me-2 action-btn">Login</a>
-                <a href="{{route('register') }}" class="btn btn-outline-success action-btn">Registro</a>
+                @auth
+                    <span class="me-2">Hola, {{ Auth::user()->name }}</span>
+                    <a href="{{ route('profile.show') }}" class="btn btn-outline-secondary me-2 action-btn">Perfil</a>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger action-btn">Cerrar sesión</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary me-2 action-btn">Login</a>
+                    <a href="{{ route('register') }}" class="btn btn-outline-success action-btn">Registro</a>
+                @endauth
             </div>
         </div>
 
-        <form action="{{ url('/') }}" method="POST" class="task-form">
+        <form action="{{ route('tareas.store') }}" method="POST" class="task-form">
             @csrf
             <div class="input-group">
                 <input type="text" class="form-control" id="title" name="title" placeholder="Escribe una nueva tarea...">
@@ -87,8 +96,8 @@
                     <tr>
                         <td>{{ $title->title }}</td>
                         <td class="table-actions">
-                            <a href="{{ route('title.edit', $title->id) }}" class="btn btn-primary btn-sm action-btn" data-toggle="tooltip" data-placement="top" title="Editar tarea"><i class="fas fa-edit"></i></a>
-                            <form action="{{ route('title.destroy', $title->id) }}" method="POST" style="display: inline-block;">
+                            <a href="{{ route('tareas.edit', $title->id) }}" class="btn btn-primary btn-sm action-btn" data-toggle="tooltip" data-placement="top" title="Editar tarea"><i class="fas fa-edit"></i></a>
+                            <form action="{{ route('tareas.destroy', $title->id) }}" method="POST" style="display: inline-block;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm action-btn" data-toggle="tooltip" data-placement="top" title="Eliminar tarea"><i class="fas fa-trash-alt"></i></button>
@@ -102,8 +111,8 @@
     </div>
 
     <!-- Bootstrap JavaScript Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
     <!-- Font Awesome Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 

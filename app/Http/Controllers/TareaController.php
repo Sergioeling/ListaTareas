@@ -1,79 +1,64 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\tarea;
+use App\Models\Tarea;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TareaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $title['titles']=Tarea::all();
-
-        return view('tarea.index', $title);
+        $titles = Tarea::where('user_id', Auth::id())->get();
+        return view('tarea.index', compact('titles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $title = $request->all(); // o $title = $request->input('title');
-        Tarea::create($title);
-        return redirect ('/');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(tarea $tarea)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        $title = Tarea::find($id);
-        return view('tarea.edit', compact('title')); 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        $titleData = $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'nullable|date',
+            'priority' => 'nullable|string|in:low,medium,high',
+            'status' => 'nullable|string|in:pending,completed',
+            'tag' => 'nullable|string',
         ]);
 
-        $title = Tarea::findOrFail($id);
-        $title->update($titleData);
+        $validated['user_id'] = Auth::id();
+
+        Tarea::create($validated);
 
         return redirect('/');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function edit($id)
+    {
+        $title = Tarea::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        return view('tarea.edit', compact('title'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'nullable|date',
+            'priority' => 'nullable|string|in:low,medium,high',
+            'status' => 'nullable|string|in:pending,completed',
+            'tag' => 'nullable|string',
+        ]);
+
+        $title = Tarea::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $title->update($validated);
+
+        return redirect('/');
+    }
+
     public function destroy($id)
     {
-        $title = Tarea::findOrFail($id);
+        $title = Tarea::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $title->delete();
-        return redirect ('/');
+
+        return redirect('/');
     }
 }
