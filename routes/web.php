@@ -13,7 +13,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return view('profile.show');
     })->name('profile.show');
 
-    // Dashboard route
+    // ruta del dasboar Profile
     Route::get('/dashboard', function () {
         return view('profile.show');
     })->name('dashboard');
